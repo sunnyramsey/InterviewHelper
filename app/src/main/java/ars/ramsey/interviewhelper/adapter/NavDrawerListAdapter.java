@@ -53,7 +53,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
         TextView txtCount = (TextView) convertView.findViewById(R.id.drawer_counter);
 
         imgIcon.setImageResource(navDrawerItems.get(position).getIcon());
-        imgIcon.setColorFilter(context.getResources().getColor(navDrawerItems.get(position).getTint()));
+        //imgIcon.setColorFilter(context.getResources().getColor(navDrawerItems.get(position).getTint()));
         txtTitle.setText(navDrawerItems.get(position).getTitle());
 
         // displaying count

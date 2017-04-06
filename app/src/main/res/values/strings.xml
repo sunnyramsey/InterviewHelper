@@ -16,11 +16,11 @@
 
     <string name="article_content">很多答案是从使用上讲的，我加两个技术方面的。搜索引擎需要对抓取到的结果进行管理。当索引结果越来越多时，保证存储和查询速度</string>
 
-    <string name="drawer_home">首页</string>
+    <string name="drawer_task">任务</string>
     <string name="drawer_explore">发现</string>
-    <string name="drawer_follow">关注</string>
-    <string name="drawer_collect">收藏</string>
-    <string name="drawer_draft">草稿</string>
+    <string name="drawer_calender">日历</string>
+    <string name="drawer_exp">面经</string>
+    <string name="drawer_review">复习</string>
     <string name="drawer_question">提问</string>
 
 
