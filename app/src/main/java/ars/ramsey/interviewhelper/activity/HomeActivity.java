@@ -23,12 +23,15 @@ import ars.ramsey.interviewhelper.R;
 import ars.ramsey.interviewhelper.adapter.NavDrawerListAdapter;
 import ars.ramsey.interviewhelper.model.bean.NavDrawerItem;
 
+/**
+ * Created by Ramsey on 2017/4/7.
+ */
+
 public class HomeActivity extends AppCompatActivity {
 
     private ListView mDrawerMenu;
     private String[] mNavMenuTitles;
     private TypedArray mNavMenuIconsTypeArray;
-    private TypedArray mNavMenuIconTintTypeArray;
     private ArrayList<NavDrawerItem> mNavDrawerItems;
     private NavDrawerListAdapter mAdapter;
     private Toolbar actionBarToolbar;
@@ -39,33 +42,18 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        setupToolbar();
         setupDrawer();
-        //setupToolbar();
-
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if(drawerLayout == null)
+            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -83,24 +71,33 @@ public class HomeActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                openDrawer();
+                return true;
+            case R.id.action_settings:
+                break;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    public void initViewAndEvent(){
 
-    }
 
     public void setupToolbar(){
         final ActionBar ab = getActionBarToolbar();
-        //ab.setHomeAsUpIndicator(R.drawable.side_nav_bar);
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
+    }
+
+    private ActionBar getActionBarToolbar() {
+        if (actionBarToolbar == null) {
+            actionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (actionBarToolbar != null) {
+                setSupportActionBar(actionBarToolbar);
+            }
+        }
+        return getSupportActionBar();
     }
 
     private void setupDrawer() {
@@ -114,44 +111,46 @@ public class HomeActivity extends AppCompatActivity {
         // nav drawer icons from resources
         mNavMenuIconsTypeArray = getResources()
                 .obtainTypedArray(R.array.nav_drawer_icons);
-        mNavMenuIconTintTypeArray = getResources()
-                .obtainTypedArray(R.array.nav_drawer_tint);
-        mNavDrawerItems = new ArrayList<NavDrawerItem>();
+        mNavDrawerItems = new ArrayList<>();
         for (int i = 0; i < mNavMenuTitles.length; i++) {
             mNavDrawerItems.add(new NavDrawerItem(mNavMenuTitles[i], mNavMenuIconsTypeArray
-                    .getResourceId(i, -1), mNavMenuIconTintTypeArray.getResourceId(i, -1)));
+                    .getResourceId(i, -1)));
         }
         mNavMenuIconsTypeArray.recycle();
         // setting the nav drawer list adapter
         mAdapter = new NavDrawerListAdapter(this,
                 mNavDrawerItems);
         mDrawerMenu.setAdapter(mAdapter);
-        mDrawerMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                if (!BaseUtil.isEmpty(mNavDrawerItems, i)) {
-//                    NavDrawerItem navDrawerItem = mNavDrawerItems.get(i);
-//                    if (navDrawerItem != null) {
-//                        selectItem(i, navDrawerItem.getTitle());
-//                    }
-//                }
-            }
-        });
+//        mDrawerMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+////                if (!BaseUtil.isEmpty(mNavDrawerItems, i)) {
+////                    NavDrawerItem navDrawerItem = mNavDrawerItems.get(i);
+////                    if (navDrawerItem != null) {
+////                        selectItem(i, navDrawerItem.getTitle());
+////                    }
+////                }
+//            }
+//        });
 
 
         //selectItem(0, mNavDrawerItems.get(0).getTitle());
     }
 
-
-    protected ActionBar getActionBarToolbar() {
-        if (actionBarToolbar == null) {
-            actionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
-            if (actionBarToolbar != null) {
-                setSupportActionBar(actionBarToolbar);
-            }
-        }
-        return getSupportActionBar();
+    private void openDrawer() {
+        if (drawerLayout == null)
+            return;
+        drawerLayout.openDrawer(GravityCompat.START);
     }
+
+    private void closeDrawer() {
+        if (drawerLayout == null)
+            return;
+        drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+
+
 
 
 }

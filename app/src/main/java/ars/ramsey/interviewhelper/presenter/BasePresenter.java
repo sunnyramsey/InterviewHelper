@@ -9,4 +9,6 @@ import ars.ramsey.interviewhelper.view.BaseView;
 public interface BasePresenter <T extends BaseView>{
     public void attachView(T view);
     public void detachView(T view);
+
+
 }

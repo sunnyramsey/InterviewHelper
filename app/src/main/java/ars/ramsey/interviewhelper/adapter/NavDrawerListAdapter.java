@@ -14,6 +14,10 @@ import java.util.List;
 import ars.ramsey.interviewhelper.R;
 import ars.ramsey.interviewhelper.model.bean.NavDrawerItem;
 
+/**
+ * Created by Ramsey on 2017/4/7.
+ */
+
 
 public class NavDrawerListAdapter extends BaseAdapter {
 
@@ -42,29 +46,29 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
         if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater)
                     context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+            holder = new ViewHolder();
+            holder.imgIcon = (ImageView) convertView.findViewById(R.id.drawer_icon);
+            holder.txtTitle = (TextView) convertView.findViewById(R.id.drawer_title);
+            convertView.setTag(holder);
+        }else{
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        ImageView imgIcon = (ImageView) convertView.findViewById(R.id.drawer_icon);
-        TextView txtTitle = (TextView) convertView.findViewById(R.id.drawer_title);
-        TextView txtCount = (TextView) convertView.findViewById(R.id.drawer_counter);
+        holder.imgIcon.setImageResource(navDrawerItems.get(position).getIcon());
+        holder.txtTitle.setText(navDrawerItems.get(position).getTitle());
 
-        imgIcon.setImageResource(navDrawerItems.get(position).getIcon());
-        //imgIcon.setColorFilter(context.getResources().getColor(navDrawerItems.get(position).getTint()));
-        txtTitle.setText(navDrawerItems.get(position).getTitle());
-
-        // displaying count
-        // check whether it set visible or not
-        if (navDrawerItems.get(position).getCounterVisibility()) {
-            txtCount.setText(navDrawerItems.get(position).getCount());
-        } else {
-            // hide the counter view
-            txtCount.setVisibility(View.GONE);
-        }
         return convertView;
+    }
+
+    private static class ViewHolder{
+        ImageView imgIcon;
+        TextView txtTitle;
+
     }
 
 }
