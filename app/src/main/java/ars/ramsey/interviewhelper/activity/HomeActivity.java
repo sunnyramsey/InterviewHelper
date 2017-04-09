@@ -2,26 +2,23 @@ package ars.ramsey.interviewhelper.activity;
 
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import ars.ramsey.interviewhelper.R;
 import ars.ramsey.interviewhelper.adapter.NavDrawerListAdapter;
+import ars.ramsey.interviewhelper.adapter.TaskListAdapter;
 import ars.ramsey.interviewhelper.model.bean.NavDrawerItem;
+import ars.ramsey.interviewhelper.view.LoadMoreRecyclerView;
 
 /**
  * Created by Ramsey on 2017/4/7.
@@ -38,6 +35,11 @@ public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private int position;
 
+    //for ui testing
+    private LoadMoreRecyclerView recyclerView;
+    private ArrayList<Integer> listData = new ArrayList<>();
+    private TaskListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,27 @@ public class HomeActivity extends AppCompatActivity {
 
         setupToolbar();
         setupDrawer();
+
+        recyclerView = (LoadMoreRecyclerView)findViewById(R.id.load_recycler_view);
+        for(int i = 0;i<50;i++)
+            listData.add(i);
+        adapter = new TaskListAdapter(this,listData);
+        recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.setLoadMoreListener(new LoadMoreRecyclerView.LoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                for(int i = 50;i<100;i++)
+                    listData.add(i);
+                adapter.notifyDataSetChanged();
+                recyclerView.loadMoreComplete();
+            }
+        });
+
     }
 
     @Override
