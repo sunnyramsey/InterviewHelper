@@ -38,6 +38,9 @@ public final class TasksPersistenceContract {
         public static final String COLUMN_NAME_NEXT_DATE = "next_date";
         public static final String COLUMN_NAME_FINISHED_DATE = "finished_date";
         public static final String COLUMN_NAME_OFFER = "offer";
+        public static final String COLUMN_NAME_ADDRESS = "address";
+        public static final String COLUMN_NAME_COMPLETED = "completed";
+
 
         public static final String[][] COLUMNS = {
                 {COLUMN_NAME_ID, BaseDatabaseType.TYPE_PRIMARY_KEY},
@@ -47,7 +50,9 @@ public final class TasksPersistenceContract {
                 {COLUMN_NAME_CREATE_DATE, BaseDatabaseType.TYPE_TEXT},
                 {COLUMN_NAME_NEXT_DATE, BaseDatabaseType.TYPE_INTEGER},
                 {COLUMN_NAME_FINISHED_DATE,BaseDatabaseType.TYPE_TEXT},
-                {COLUMN_NAME_OFFER,BaseDatabaseType.TYPE_BOOLEAN}
+                {COLUMN_NAME_OFFER,BaseDatabaseType.TYPE_BOOLEAN},
+                {COLUMN_NAME_ADDRESS,BaseDatabaseType.TYPE_TEXT},
+                {COLUMN_NAME_COMPLETED,BaseDatabaseType.TYPE_BOOLEAN}
         };
     }
 

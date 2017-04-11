@@ -19,17 +19,11 @@
 
         <!--<include layout="@layout/include_list_view" />-->
 
-        <ars.ramsey.interviewhelper.view.LoadMoreRecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/load_recycler_view"/>
-
-        <!--
         <FrameLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-            -->
+
 
     </LinearLayout>
 

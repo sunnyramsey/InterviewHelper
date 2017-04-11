@@ -24,9 +24,9 @@ public interface TasksSource {
         void onDataNotAvailable();
     }
 
-    void getTasks(LoadTasksCallback callback);
+    void getTasks(int page,LoadTasksCallback callback);
 
-    void getTask(String taskId, GetTaskCallback callback);
+    void getTask(int taskId, GetTaskCallback callback);
 
     void saveTask(Task task);
 

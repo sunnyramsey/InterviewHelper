@@ -50,7 +50,7 @@ public class LoadingMoreFooter extends LinearLayout {
         addFootLoadingView(new ProgressBar(context, null, android.R.attr.progressBarStyle));
 
         TextView textView = new TextView(context);
-        textView.setText("已经到底啦~");
+        textView.setText("已经到底拉╮(╯_╰)╭");
         addFootEndView(textView);
 
         addView(view);

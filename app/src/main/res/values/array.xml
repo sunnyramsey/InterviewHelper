@@ -19,4 +19,11 @@
         <item>@drawable/ic_drawer_review</item>
     </array>
 
+    <array name="progress_bar_colors">
+        <item>@color/blue</item>
+        <item>@color/red</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+    </array>
+
 </resources>

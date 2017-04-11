@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -48,6 +50,13 @@ public class LoadMoreRecyclerView extends RecyclerView {
         mInnerAdapter = adapter;
         mLoadMoreAdapter = new LoadMoreAdapter(this,adapter,mLoadingMoreFooter);
         super.setAdapter(mLoadMoreAdapter);
+        mInnerAdapter.registerAdapterDataObserver(mDataObserver);
+    }
+
+
+    @Override
+    public void onScrolled(int dx, int dy) {
+        super.onScrolled(dx, dy);
     }
 
     @Override
@@ -67,8 +76,10 @@ public class LoadMoreRecyclerView extends RecyclerView {
             } else {
                 lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
             }
+            int visibleItemCount = layoutManager.getChildCount();
+            int totalItemCount = layoutManager.getItemCount();
 
-            if (layoutManager.getChildCount() > 0 && lastVisibleItemPosition >= layoutManager.getItemCount() - 1) {
+            if (layoutManager.getChildCount() > 1 && lastVisibleItemPosition >= layoutManager.getItemCount() - 1 && totalItemCount > visibleItemCount) {
                 mLoadingMoreFooter.setVisible();
                 isLoading = true;
                 mloadMoreListener.onLoadMore();
@@ -149,5 +160,38 @@ public class LoadMoreRecyclerView extends RecyclerView {
             ((LoadMoreAdapter) mLoadMoreAdapter).setOnItemLongClickListener(listener);
         }
     }
+
+
+    private RecyclerView.AdapterDataObserver mDataObserver = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            mLoadMoreAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            mLoadMoreAdapter.notifyItemRangeInserted(positionStart, itemCount);
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            mLoadMoreAdapter.notifyItemRangeChanged(positionStart, itemCount);
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
+            mLoadMoreAdapter.notifyItemRangeChanged(positionStart, itemCount, payload);
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            mLoadMoreAdapter.notifyItemRangeRemoved(positionStart, itemCount);
+        }
+
+        @Override
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+            mLoadMoreAdapter.notifyItemMoved(fromPosition, toPosition);
+        }
+    };
 
 }

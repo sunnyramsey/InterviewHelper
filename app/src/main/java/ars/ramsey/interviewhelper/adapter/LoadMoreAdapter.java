@@ -42,7 +42,6 @@ public class LoadMoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Log.i("RAMSEY",String.valueOf(position));
         holder.itemView.setOnClickListener(this);
         holder.itemView.setOnLongClickListener(this);
         if(!isFooter(position)){

@@ -1,6 +1,12 @@
 package ars.ramsey.interviewhelper.presenter;
 
+import android.util.Log;
+
+import java.util.List;
+
+import ars.ramsey.interviewhelper.model.TasksSource;
 import ars.ramsey.interviewhelper.model.bean.Task;
+import ars.ramsey.interviewhelper.model.local.TasksLocalSource;
 import ars.ramsey.interviewhelper.view.BaseView;
 import ars.ramsey.interviewhelper.view.TaskListView;
 
@@ -11,11 +17,13 @@ import ars.ramsey.interviewhelper.view.TaskListView;
 public class TaskPresenter implements BasePresenter<TaskListView>{
 
     private TaskListView mView;
+    private TasksLocalSource mTasksSource;
 
-
-    public TaskPresenter()
+    public TaskPresenter(TasksLocalSource tasksLocalSource,TaskListView view)
     {
-
+        mView = view;
+        mTasksSource = tasksLocalSource;
+        mView.setPresenter(this);
     }
 
     @Override
@@ -36,9 +44,30 @@ public class TaskPresenter implements BasePresenter<TaskListView>{
         return mView;
     }
 
-    public void loadTasks()
+    public void loadTasks(final int page)
     {
+        mTasksSource.getTasks(page, new TasksSource.LoadTasksCallback() {
+            @Override
+            public void onTasksLoaded(List<Task> tasks) {
+                if(page == 1)
+                {
+                    mView.refresh(tasks);
+                }else{
+                    mView.loadMore(tasks);
+                }
+            }
 
+            @Override
+            public void onDataNotAvailable() {
+                mView.loadMore(null);
+            }
+        });
+
+    }
+
+    public void saveTasks(Task task)
+    {
+        mTasksSource.saveTask(task);
     }
 
 }
