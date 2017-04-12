@@ -28,15 +28,17 @@
             android:layout_weight="1"
             android:background="@color/colorBlue" />
 
-        <TextView
-            android:id="@+id/txtContent"
+        <ViewStub
+            android:id="@+id/task_edit_stub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="30dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:textSize="20sp"
-            android:text="TextView" />
+            android:layout="@layout/task_edit_item"/>
+        <ViewStub
+            android:id="@+id/task_noedit_stub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/task_noedit_item"/>
+
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

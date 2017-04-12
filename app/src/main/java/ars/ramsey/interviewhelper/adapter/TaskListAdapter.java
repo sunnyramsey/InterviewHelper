@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import ars.ramsey.interviewhelper.R;
 import ars.ramsey.interviewhelper.activity.TaskDetailActivity;
+import ars.ramsey.interviewhelper.activity.TaskEditActivity;
 import ars.ramsey.interviewhelper.model.bean.Task;
 
 /**
