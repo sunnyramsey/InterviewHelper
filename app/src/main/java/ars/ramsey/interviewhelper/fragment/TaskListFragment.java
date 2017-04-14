@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +14,18 @@ import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.daimajia.swipe.util.Attributes;
 import com.jpardogo.android.googleprogressbar.library.NexusRotationCrossDrawable;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ars.ramsey.interviewhelper.R;
+import ars.ramsey.interviewhelper.adapter.RecyclerViewAdapter;
 import ars.ramsey.interviewhelper.adapter.TaskListAdapter;
+import ars.ramsey.interviewhelper.adapter.TaskListSwipeAdapter;
 import ars.ramsey.interviewhelper.model.bean.Task;
 import ars.ramsey.interviewhelper.presenter.TaskPresenter;
 import ars.ramsey.interviewhelper.view.LoadMoreRecyclerView;
@@ -34,13 +39,17 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private LoadMoreRecyclerView loadMoreRecyclerView;
-    private TaskListAdapter taskListAdapter;
+    private TaskListSwipeAdapter taskListAdapter;
     private FloatingActionButton actionButton;
 
     private ArrayList<Task> mDataList = new ArrayList<>();
     private int page = 1;
 
     private TaskPresenter presenter;
+
+    //For testing
+    private RecyclerView.Adapter adapter;
+    private ArrayList<String> mDataSet;
 
     public TaskListFragment() {
     }
@@ -66,8 +75,18 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
             }
         });
 
+        //For testing
+//        String[] adapterData = new String[]{"Alabama", "Alaska", "Arizona", "Arkansas", "California","ABCSD","SFJLKJ","FASDGSDG"};
+//        mDataSet = new ArrayList<>(Arrays.asList(adapterData));
+//        adapter = new RecyclerViewAdapter(getContext(), mDataSet);
+//        ((RecyclerViewAdapter) adapter).setMode(Attributes.Mode.Single);
+//        adapter.setHasStableIds(true);
+//        loadMoreRecyclerView.setAdapter(adapter);
+
         //Init Recyclerview
-        taskListAdapter = new TaskListAdapter(getContext(),mDataList);
+        taskListAdapter = new TaskListSwipeAdapter(getContext(),mDataList);
+        taskListAdapter.setMode(Attributes.Mode.Single);
+
         loadMoreRecyclerView.setAdapter(taskListAdapter);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -86,6 +105,9 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
             public void onLoadMore() {
                 page++;
                 presenter.loadTasks(page);
+//                mDataSet.add("RAMSEY");
+//                adapter.notifyDataSetChanged();
+//                loadMoreRecyclerView.loadMoreComplete();
             }
         });
 

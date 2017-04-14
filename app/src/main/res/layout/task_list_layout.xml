@@ -7,8 +7,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp">
+        android:layout_height="match_parent">
         <ars.ramsey.interviewhelper.view.LoadMoreRecyclerView
             android:id="@+id/load_more_recycleview"
             android:layout_width="match_parent"
