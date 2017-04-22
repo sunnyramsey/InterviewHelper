@@ -1,5 +1,6 @@
 package ars.ramsey.interviewhelper.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ars.ramsey.interviewhelper.R;
+import ars.ramsey.interviewhelper.activity.TaskEditActivity;
 import ars.ramsey.interviewhelper.adapter.RecyclerViewAdapter;
 import ars.ramsey.interviewhelper.adapter.TaskListAdapter;
 import ars.ramsey.interviewhelper.adapter.TaskListSwipeAdapter;
@@ -71,7 +73,10 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("RAMSEY","jlksjdaljglsdf");
+                Log.i("RAMSEY","Create New Task");
+                Intent intent = new Intent(getContext(), TaskEditActivity.class);
+                intent.putExtra("CREATE",true);
+                startActivity(intent);
             }
         });
 
@@ -130,6 +135,7 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
     public void onResume() {
         super.onResume();
         presenter.loadTasks(page);
+        taskListAdapter.notifyDataSetChanged();
     }
 
 

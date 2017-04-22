@@ -30,6 +30,7 @@ public class TaskEditActivity extends AppCompatActivity {
     private Task mTask;
     private TasksLocalSource mLocalSource;
     private TextView txtTitle;
+    private boolean isCreate;
 
     @Override
     public void onBackPressed() {
@@ -53,11 +54,19 @@ public class TaskEditActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(manager);
 
         mTask = getIntent().getParcelableExtra("TASK");
+        isCreate = getIntent().getBooleanExtra("CREATE",false);
+        if(isCreate)
+        {
+            mAdapter = new TaskDetailAdapter(true);
+            txtTitle.setText("新建任务");
+        }else{
+            mAdapter = new TaskDetailAdapter(mTask,true);
+            txtTitle.setText(mTask.getCompanyName());
+        }
 
-        mAdapter = new TaskDetailAdapter(mTask,true);
         recyclerView.setAdapter(mAdapter);
 
-        txtTitle.setText(mTask.getCompanyName());
+
 
 
         //Init cancle button
@@ -77,9 +86,21 @@ public class TaskEditActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra("TASK",task);
                 setResult(1,intent);
+                if(isCreate)
+                {
+                    //new task to save
+                    mLocalSource.saveTask(task);
+                }else{
+                    //update a old task
+                    //Log.i("RAMSEY","update:"+task.getId());
+                    mLocalSource.updateTask(task);
+                }
                 finish();
             }
         });
 
+        mLocalSource = TasksLocalSource.getInstance(getApplicationContext());
+
     }
+
 }

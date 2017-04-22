@@ -48,6 +48,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailView<TaskD
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.i("RAMSEY",this.getClass().toString()+":onViewCreated");
 
 
         mTask = getArguments().getParcelable("TASK");
@@ -75,6 +76,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailView<TaskD
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), TaskEditActivity.class);
                 intent.putExtra("TASK",mTask);
+                intent.putExtra("CREATE",false);
                 startActivityForResult(intent,0);
             }
         });
@@ -84,6 +86,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailView<TaskD
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        Log.i("RAMSEY",this.getClass().toString()+":onActivityCreated");
         super.onActivityCreated(savedInstanceState);
 
     }
@@ -91,6 +94,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailView<TaskD
 
     @Override
     public void onResume() {
+        Log.i("RAMSEY",this.getClass().toString()+":onResume");
         super.onResume();
     }
 

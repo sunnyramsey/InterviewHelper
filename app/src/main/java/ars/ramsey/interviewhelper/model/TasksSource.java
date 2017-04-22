@@ -30,6 +30,8 @@ public interface TasksSource {
 
     void saveTask(Task task);
 
+    void updateTask(Task task);
+
     void completeTask(Task task);
 
     void completeTask(String taskId);

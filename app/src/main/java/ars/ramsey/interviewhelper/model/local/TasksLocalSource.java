@@ -93,7 +93,6 @@ public class TasksLocalSource implements TasksSource {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor c = db.query(TaskEntry.TABLE_NAME,null,"id=?",new String[]{String.valueOf(taskId)},null,null,null);
-        Log.i("RAMSEY","count"+c.getCount());
 
         if(c != null && c.getCount() == 1)
         {
@@ -139,6 +138,33 @@ public class TasksLocalSource implements TasksSource {
 
         db.insert(TaskEntry.TABLE_NAME,null,contentValues);
         db.close();
+    }
+
+    @Override
+    public void updateTask(Task task) {
+        try{
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put(TaskEntry.COLUMN_NAME_COMPANY_NAME,task.getCompanyName());
+            contentValues.put(TaskEntry.COLUMN_NAME_JOB_NAME,task.getJobName());
+            contentValues.put(TaskEntry.COLUMN_NAME_STATUS,task.getStatus());
+            contentValues.put(TaskEntry.COLUMN_NAME_CREATE_DATE,task.getCreateDate());
+            contentValues.put(TaskEntry.COLUMN_NAME_NEXT_DATE,task.getNextDate());
+            contentValues.put(TaskEntry.COLUMN_NAME_FINISHED_DATE,task.getFinishedDate());
+            contentValues.put(TaskEntry.COLUMN_NAME_COMPLETED,task.isCompleted());
+            contentValues.put(TaskEntry.COLUMN_NAME_OFFER,task.isOffer());
+            contentValues.put(TaskEntry.COLUMN_NAME_ADDRESS,task.getAddress());
+
+            db.update(TaskEntry.TABLE_NAME,contentValues,"id=?",new String[]{String.valueOf(task.getId())});
+            db.close();
+        }catch (Exception e)
+        {
+            Log.i("RAMSEY","exception");
+        }
+
+
     }
 
     @Override

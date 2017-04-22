@@ -21,7 +21,17 @@ public class Task implements Parcelable {
     private String address;
     private boolean completed;
 
-    public Task(){}
+    public Task(){
+        companyName = "";
+        jobName = "";
+        status = "";
+        createDate = "";
+        nextDate = "";
+        finishedDate = "";
+        offer = false;
+        address = "";
+        completed = false;
+    }
 
     public Task(String companyName,String jobName)
     {

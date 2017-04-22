@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
-import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -63,10 +62,13 @@ public class TaskListSwipeAdapter extends RecyclerSwipeAdapter<TaskListSwipeAdap
         viewHolder.txtCompany.setText(task.getCompanyName());
         viewHolder.txtJob.setText(task.getJobName());
         viewHolder.txtStatus.setText(task.getStatus());
-        if(task.getAddress() == null || task.getAddress().equals(""))
+        if(task.getAddress() == null || task.getAddress().equals("")) {
             viewHolder.txtAddress.setVisibility(View.GONE);
-        else
+        }
+        else {
+            viewHolder.txtAddress.setVisibility(View.VISIBLE);
             viewHolder.txtAddress.setText(task.getAddress());
+        }
         if(task.getNextDate() == null || task.getNextDate().equals(""))
             viewHolder.txtNextDate.setVisibility(View.GONE);
         else
