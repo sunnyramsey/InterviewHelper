@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <EditText
+    <ars.ramsey.interviewhelper.widget.CalendarEditText
         android:id="@+id/txtEditContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -10,6 +10,7 @@
         android:layout_marginTop="3dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="3dp"
-        android:textSize="20sp"
-        android:theme="@style/MyEditText"/>
+        android:theme="@style/MyEditText"
+        android:drawableRight="@drawable/ic_datetime"/>
+
 </LinearLayout>

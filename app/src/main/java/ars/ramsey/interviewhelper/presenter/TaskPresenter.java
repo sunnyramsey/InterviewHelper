@@ -59,7 +59,14 @@ public class TaskPresenter implements BasePresenter<TaskListView>{
 
             @Override
             public void onDataNotAvailable() {
-                mView.loadMore(null);
+                if(page == 1)
+                {
+                    mView.refresh(null);
+                }else
+                {
+                    mView.loadMore(null);
+                }
+
             }
         });
 

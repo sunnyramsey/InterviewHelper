@@ -82,6 +82,7 @@ public class LoadMoreRecyclerView extends RecyclerView {
             if (layoutManager.getChildCount() > 1 && lastVisibleItemPosition >= layoutManager.getItemCount() - 1 && totalItemCount > visibleItemCount) {
                 mLoadingMoreFooter.setVisible();
                 isLoading = true;
+                Log.i("RAMSEY","load more");
                 mloadMoreListener.onLoadMore();
             }
         }

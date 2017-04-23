@@ -2,12 +2,15 @@ package ars.ramsey.interviewhelper.adapter;
 
 import android.app.DatePickerDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,6 +25,10 @@ import ars.ramsey.interviewhelper.model.bean.Task;
  */
 
 public class TaskDetailAdapter extends RecyclerView.Adapter {
+
+    private static final int NORMAL_ITEM = 1;
+    private static final int CALENDAR_ITEM  = 2;
+    private static final int DROP_ITEM = 3;
 
     private static final String[] ITEM_DATA = {
             "公  司",
@@ -106,8 +113,16 @@ public class TaskDetailAdapter extends RecyclerView.Adapter {
             ViewStub viewStub = (ViewStub) view.findViewById(R.id.task_noedit_stub);
             viewStub.inflate();
         }else{
-            ViewStub viewStub = (ViewStub) view.findViewById(R.id.task_edit_stub);
-            viewStub.inflate();
+            if(viewType == NORMAL_ITEM) {
+                ViewStub viewStub = (ViewStub) view.findViewById(R.id.task_edit_stub);
+                viewStub.inflate();
+            }else if(viewType == DROP_ITEM){
+                ViewStub viewStub = (ViewStub) view.findViewById(R.id.task_drop_stub);
+                viewStub.inflate();
+            }else {
+                ViewStub viewStub = (ViewStub) view.findViewById(R.id.task_calendar_stub);
+                viewStub.inflate();
+            }
         }
         TaskDetailViewHolder viewHolder = new TaskDetailViewHolder(view,isEdit);
         return viewHolder;
@@ -141,6 +156,17 @@ public class TaskDetailAdapter extends RecyclerView.Adapter {
             });
         }
 
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(itemTitle[position].contains("日期"))
+            return CALENDAR_ITEM;
+        else if(itemTitle[position].equals("状  态"))
+            return DROP_ITEM;
+        else
+            return NORMAL_ITEM;
+        //return super.getItemViewType(position);
     }
 
     @Override

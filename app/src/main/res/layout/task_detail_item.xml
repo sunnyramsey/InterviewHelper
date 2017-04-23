@@ -38,6 +38,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout="@layout/task_noedit_item"/>
+        <ViewStub
+            android:id="@+id/task_calendar_stub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/task_calendar_item"/>
+        <ViewStub
+            android:id="@+id/task_drop_stub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/task_drop_item"/>
+
 
     </LinearLayout>
 

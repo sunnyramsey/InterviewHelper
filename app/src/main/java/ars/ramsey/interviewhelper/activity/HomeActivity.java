@@ -23,6 +23,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.jpardogo.android.googleprogressbar.library.NexusRotationCrossDrawable;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import ars.ramsey.interviewhelper.R;
 import ars.ramsey.interviewhelper.adapter.NavDrawerListAdapter;
@@ -65,6 +66,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Fresco.initialize(getApplicationContext());
         frameLayout = (FrameLayout)findViewById(R.id.content);
+
 
 
         setupToolbar();

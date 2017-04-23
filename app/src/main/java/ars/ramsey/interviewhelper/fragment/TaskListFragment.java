@@ -25,7 +25,6 @@ import java.util.List;
 
 import ars.ramsey.interviewhelper.R;
 import ars.ramsey.interviewhelper.activity.TaskEditActivity;
-import ars.ramsey.interviewhelper.adapter.RecyclerViewAdapter;
 import ars.ramsey.interviewhelper.adapter.TaskListAdapter;
 import ars.ramsey.interviewhelper.adapter.TaskListSwipeAdapter;
 import ars.ramsey.interviewhelper.model.bean.Task;
@@ -80,13 +79,6 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
             }
         });
 
-        //For testing
-//        String[] adapterData = new String[]{"Alabama", "Alaska", "Arizona", "Arkansas", "California","ABCSD","SFJLKJ","FASDGSDG"};
-//        mDataSet = new ArrayList<>(Arrays.asList(adapterData));
-//        adapter = new RecyclerViewAdapter(getContext(), mDataSet);
-//        ((RecyclerViewAdapter) adapter).setMode(Attributes.Mode.Single);
-//        adapter.setHasStableIds(true);
-//        loadMoreRecyclerView.setAdapter(adapter);
 
         //Init Recyclerview
         taskListAdapter = new TaskListSwipeAdapter(getContext(),mDataList);
@@ -122,7 +114,6 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i("RAMSEY","onRefresh");
                 page = 1;
                 presenter.loadTasks(page);
 
@@ -151,7 +142,8 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
         loadMoreRecyclerView.loadMoreComplete();
         swipeRefreshLayout.setRefreshing(false);
         mDataList.clear();
-        mDataList.addAll(data);
+        if(data != null)
+            mDataList.addAll(data);
         taskListAdapter.notifyDataSetChanged();
     }
 
