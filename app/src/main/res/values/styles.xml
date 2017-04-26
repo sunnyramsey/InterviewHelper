@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:listDivider">@drawable/divider_bg</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -98,5 +99,13 @@
         <item name="colorControlNormal">@android:color/transparent</item>
         <item name="colorControlActivated">@color/colorBlue</item>
     </style>
+
+    <style name="CalendarTextAppearance"
+        parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/mcv_text_date_light</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+
 
 </resources>

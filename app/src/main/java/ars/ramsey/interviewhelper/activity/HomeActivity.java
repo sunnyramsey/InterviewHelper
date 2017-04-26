@@ -28,13 +28,16 @@ import java.util.Calendar;
 import ars.ramsey.interviewhelper.R;
 import ars.ramsey.interviewhelper.adapter.NavDrawerListAdapter;
 import ars.ramsey.interviewhelper.adapter.TaskListAdapter;
+import ars.ramsey.interviewhelper.fragment.TaskCalendarFragment;
 import ars.ramsey.interviewhelper.fragment.TaskDetailFragment;
 import ars.ramsey.interviewhelper.fragment.TaskListFragment;
 import ars.ramsey.interviewhelper.model.bean.NavDrawerItem;
 import ars.ramsey.interviewhelper.model.local.TasksLocalSource;
+import ars.ramsey.interviewhelper.presenter.TaskDatePresenter;
 import ars.ramsey.interviewhelper.presenter.TaskDetailPresenter;
 import ars.ramsey.interviewhelper.presenter.TaskPresenter;
 import ars.ramsey.interviewhelper.view.LoadMoreRecyclerView;
+import ars.ramsey.interviewhelper.view.TaskCalendarView;
 import ars.ramsey.interviewhelper.view.TaskDetailView;
 import ars.ramsey.interviewhelper.view.TaskListView;
 
@@ -51,14 +54,14 @@ public class HomeActivity extends AppCompatActivity {
     private NavDrawerListAdapter mAdapter;
     private Toolbar actionBarToolbar;
     private DrawerLayout drawerLayout;
-    private int position;
+    private int position = -1;
+    private int selectposition = -1;
 
     private FrameLayout frameLayout;
 
-    //for ui testing
-    private LoadMoreRecyclerView recyclerView;
-    private ArrayList<Integer> listData = new ArrayList<>();
-    private TaskListAdapter adapter;
+    private Fragment mCurFragment;
+    private NavDrawerItem mCurNavDrawerItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,10 +153,32 @@ public class HomeActivity extends AppCompatActivity {
         mDrawerMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                NavDrawerItem navDrawerItem = mNavDrawerItems.get(i);
-                if (navDrawerItem != null) {
-                    selectItem(i, navDrawerItem.getTitle());
+                mCurNavDrawerItem = mNavDrawerItems.get(i);
+                selectposition = i;
+                closeDrawer();
+            }
+        });
+
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                if (mCurNavDrawerItem != null) {
+                    selectItem(selectposition,mCurNavDrawerItem.getTitle());
                 }
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
 
             }
         });
@@ -177,21 +202,37 @@ public class HomeActivity extends AppCompatActivity {
 
     public void selectItem(int position, String title) {
         Fragment fragment = null;
-        this.position = position;
+        String tag = "";
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        selectposition = -1;
+        if(this.position == position)
+            return;
         switch (position) {
             case 0:
                 //首页
-                fragment = new TaskListFragment();
-                TaskPresenter presenter = new TaskPresenter(TasksLocalSource.getInstance(getApplicationContext()), (TaskListView) fragment);
+                tag = "TaskList";
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if(fragment == null)
+                {
+                    fragment = new TaskListFragment();
+                    TaskPresenter presenter = new TaskPresenter(TasksLocalSource.getInstance(getApplicationContext()));
+                    presenter.attachView((TaskListView) fragment);
+                }
                 break;
             case 1:
                 //发现
                 fragment = new TaskDetailFragment();
-
                 break;
             case 2:
-                //关注
-                //fragment = new FollowFragment();
+                //日历
+                tag = "TaskCalendar";
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if(fragment == null)
+                {
+                    fragment = new TaskCalendarFragment();
+                    TaskDatePresenter presenter1 = new TaskDatePresenter(TasksLocalSource.getInstance(getApplicationContext()));
+                    presenter1.attachView((TaskCalendarView)fragment);
+                }
                 break;
             case 3:
                 //收藏
@@ -209,15 +250,28 @@ public class HomeActivity extends AppCompatActivity {
                 break;
         }
 
-        if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content, fragment).commit();
-            setTitle(title);
-            closeDrawer();
-        } else {
-            Log.e("HomeActivity", "Error in creating fragment");
+        if(fragment.isAdded())
+        {
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .hide(mCurFragment).show(fragment).commit();
+                mCurFragment = fragment;
+
+        }else{
+            if(mCurFragment != null) {
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .hide(mCurFragment).add(R.id.content, fragment,tag).commit();
+                mCurFragment = fragment;
+            }else{
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .add(R.id.content, fragment,tag).commit();
+                mCurFragment = fragment;
+            }
         }
+        setTitle(title);
+        this.position = position;
     }
 
 

@@ -8,46 +8,45 @@ import android.view.MotionEvent;
 import android.widget.EditText;
 
 import ars.ramsey.interviewhelper.R;
-import ars.ramsey.interviewhelper.widget.Calendar.DateTimePickDialog;
-
 
 /**
- * Created by Ramsey on 2017/4/22.
+ * Created by Ramsey on 2017/4/23.
  */
 
-public class CalendarEditText extends EditText {
+public class RightIconEditText extends EditText{
 
-    private Drawable mCalenderIcon;
+    private Drawable mIcon;
     private boolean isIconDown;
-    private DateTimePickDialog mDialog;
+    private RightIconClickListener mListner;
 
-    public CalendarEditText(Context context) {
+    public RightIconEditText(Context context) {
         super(context);
         init();
     }
 
-    public CalendarEditText(Context context, AttributeSet attrs) {
-        super(context, attrs,android.R.attr.editTextStyle);
+    public RightIconEditText(Context context, AttributeSet attrs) {
+        super(context, attrs , android.R.attr.editTextStyle);
         init();
     }
 
-    public CalendarEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+    public RightIconEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
         if(action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_UP)
         {
-            if(mCalenderIcon != null) {
+            if(mIcon != null) {
                 int x = (int) event.getX();
                 //判断触摸点是否在水平范围内
                 boolean isInnerWidth = (x > (getWidth() - getTotalPaddingRight())) &&
                         (x < (getWidth() - getPaddingRight()));
                 //获取删除图标的边界，返回一个Rect对象
-                Rect rect = mCalenderIcon.getBounds();
+                Rect rect = mIcon.getBounds();
                 //获取删除图标的高度
                 int height = rect.height();
                 int y = (int) event.getY();
@@ -66,7 +65,8 @@ public class CalendarEditText extends EditText {
                         break;
                     case MotionEvent.ACTION_UP:
                         if (isInnerHeight && isInnerWidth  && isIconDown) {
-                            mDialog.showDialog();
+                            if(mListner != null)
+                                mListner.onRightIconClick();
                         }
                         break;
                 }
@@ -75,15 +75,29 @@ public class CalendarEditText extends EditText {
         return super.onTouchEvent(event);
     }
 
-    private void init()
+    public void setIconClickListener(RightIconClickListener listener)
     {
-        mCalenderIcon = getCompoundDrawables()[2];
-        if(mCalenderIcon == null)
-        {
-            mCalenderIcon = getResources().getDrawable(R.drawable.ic_datetime);
-        }
-        mCalenderIcon.setBounds(0,0,mCalenderIcon.getIntrinsicWidth(),mCalenderIcon.getIntrinsicHeight());
-        mDialog = new DateTimePickDialog(getContext(),this);
+        this.mListner = listener;
     }
 
+    public void setIcon(int resID)
+    {
+        mIcon = getResources().getDrawable(resID);
+        if(mIcon != null) {
+            mIcon.setBounds(0, 0, mIcon.getIntrinsicWidth(), mIcon.getIntrinsicHeight());
+            setCompoundDrawables(null,null,mIcon,null);
+        }
+    }
+
+    private void init()
+    {
+        mIcon = getCompoundDrawables()[2];
+        if(mIcon != null) {
+            mIcon.setBounds(0, 0, mIcon.getIntrinsicWidth(), mIcon.getIntrinsicHeight());
+        }
+    }
+
+    public interface RightIconClickListener{
+        void onRightIconClick();
+    }
 }

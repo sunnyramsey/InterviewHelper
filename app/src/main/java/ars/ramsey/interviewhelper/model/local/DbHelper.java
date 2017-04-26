@@ -20,7 +20,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(createTable(TasksPersistenceContract.TaskEntry.TABLE_NAME,TasksPersistenceContract.TaskEntry.COLUMNS));
+        sqLiteDatabase.execSQL("PRAGMA foreign_keys = ON;");
+        sqLiteDatabase.execSQL(createTable(TasksPersistenceContract.TaskEntry.TABLE_NAME,TasksPersistenceContract.TaskEntry.COLUMNS,null));
+        sqLiteDatabase.execSQL(createTable(TodoTasksPersistenceContract.TodoTasksEntry.TABLE_NAME,TodoTasksPersistenceContract.TodoTasksEntry.COLUMNS,
+                "foreign key (id) references task(id) on delete cascade"));
     }
 
     @Override
@@ -28,7 +31,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    private static String createTable(String tableName,String[][] columns)
+    private static String createTable(String tableName,String[][] columns,String constrain)
     {
         if(tableName == null || columns == null)
             throw  new IllegalArgumentException("Create table error!");
@@ -40,6 +43,11 @@ public class DbHelper extends SQLiteOpenHelper {
             if(i > 0)
                 sb.append(",");
             sb.append(columns[i][0]).append(" ").append(columns[i][1]);
+        }
+        if(constrain!= null && !constrain.equals(""))
+        {
+            sb.append(",");
+            sb.append(constrain);
         }
         sb.append(");");
         return sb.toString();

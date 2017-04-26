@@ -9,6 +9,11 @@
         <item>@string/drawer_review</item>
     </string-array>
 
+    <string-array name="offer_items">
+        <item>未获得</item>
+        <item>已获得</item>
+    </string-array>
+
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
     <array name="nav_drawer_icons">

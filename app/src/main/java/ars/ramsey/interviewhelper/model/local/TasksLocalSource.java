@@ -6,12 +6,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import ars.ramsey.interviewhelper.model.TasksSource;
 import ars.ramsey.interviewhelper.model.bean.Task;
+import ars.ramsey.interviewhelper.model.bean.TodoTask;
 import ars.ramsey.interviewhelper.model.local.TasksPersistenceContract.TaskEntry;
+import ars.ramsey.interviewhelper.model.local.TodoTasksPersistenceContract.TodoTasksEntry;
 
 /**
  * Created by Ramsey on 2017/4/7.
@@ -136,7 +142,25 @@ public class TasksLocalSource implements TasksSource {
         contentValues.put(TaskEntry.COLUMN_NAME_OFFER,task.isOffer());
         contentValues.put(TaskEntry.COLUMN_NAME_ADDRESS,task.getAddress());
 
-        db.insert(TaskEntry.TABLE_NAME,null,contentValues);
+        long id = db.insert(TaskEntry.TABLE_NAME,null,contentValues);
+        if(!task.getNextDate().equals("")) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            try {
+                Date date = sdf.parse(task.getNextDate());
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                ContentValues todoValues = new ContentValues();
+                todoValues.put(TodoTasksEntry.COLUMN_NAME_ID, id);
+                todoValues.put(TodoTasksEntry.COLUMN_NAME_COMPANY_NAME, task.getCompanyName());
+                todoValues.put(TodoTasksEntry.COLUMN_NAME_YEAR, calendar.get(Calendar.YEAR));
+                todoValues.put(TodoTasksEntry.COLUMN_NAME_MONTH, calendar.get(Calendar.MONTH)+1);
+                todoValues.put(TodoTasksEntry.COLUMN_NAME_DAY, calendar.get(Calendar.DAY_OF_MONTH));
+                db.insert(TodoTasksEntry.TABLE_NAME, null, todoValues);
+            } catch (ParseException e) {
+                Log.e("RAMSEY", "SAVE TO DO TASK ERROR!");
+                e.printStackTrace();
+            }
+        }
         db.close();
     }
 
@@ -158,6 +182,24 @@ public class TasksLocalSource implements TasksSource {
             contentValues.put(TaskEntry.COLUMN_NAME_ADDRESS,task.getAddress());
 
             db.update(TaskEntry.TABLE_NAME,contentValues,"id=?",new String[]{String.valueOf(task.getId())});
+
+            if(!task.getNextDate().equals("")) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                try {
+                    Date date = sdf.parse(task.getNextDate());
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date);
+                    ContentValues todoValues = new ContentValues();
+                    todoValues.put(TodoTasksEntry.COLUMN_NAME_COMPANY_NAME, task.getCompanyName());
+                    todoValues.put(TodoTasksEntry.COLUMN_NAME_YEAR, calendar.get(Calendar.YEAR));
+                    todoValues.put(TodoTasksEntry.COLUMN_NAME_MONTH, calendar.get(Calendar.MONTH));
+                    todoValues.put(TodoTasksEntry.COLUMN_NAME_DAY, calendar.get(Calendar.DAY_OF_MONTH));
+                    db.update(TodoTasksEntry.TABLE_NAME, todoValues,"id=?",new String[]{String.valueOf(task.getId())});
+                } catch (ParseException e) {
+                    Log.e("RAMSEY", "SAVE TO DO TASK ERROR!");
+                    e.printStackTrace();
+                }
+            }
             db.close();
         }catch (Exception e)
         {
@@ -165,6 +207,53 @@ public class TasksLocalSource implements TasksSource {
         }
 
 
+    }
+
+
+
+    @Override
+    public void getTasksByMonth(Date date, LoadTodoTasksCallback callback) {
+        List<TodoTask> tasks = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {
+                TodoTasksEntry.COLUMN_NAME_ID,
+                TodoTasksEntry.COLUMN_NAME_COMPANY_NAME,
+                TodoTasksEntry.COLUMN_NAME_YEAR,
+                TodoTasksEntry.COLUMN_NAME_MONTH,
+                TodoTasksEntry.COLUMN_NAME_DAY,
+        };
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int queryYear = calendar.get(Calendar.YEAR);
+        int queryMonth = calendar.get(Calendar.MONTH)+1;
+        Log.i("RAMSEY","query:"+queryYear+":"+queryMonth);
+
+        Cursor c = db.query(TodoTasksEntry.TABLE_NAME,projection,"year = ? and month = ?",new String[]{String.valueOf(queryYear),String.valueOf(queryMonth)},null,null,"id asc");
+
+
+        if(c != null && c.getCount() > 0)
+        {
+            while(c.moveToNext())
+            {
+                int id = c.getInt(c.getColumnIndexOrThrow(TodoTasksEntry.COLUMN_NAME_ID));
+                String companyName = c.getString(c.getColumnIndexOrThrow(TodoTasksEntry.COLUMN_NAME_COMPANY_NAME));
+                int year = c.getInt(c.getColumnIndexOrThrow(TodoTasksEntry.COLUMN_NAME_YEAR));
+                int month = c.getInt(c.getColumnIndexOrThrow(TodoTasksEntry.COLUMN_NAME_MONTH));
+                int day = c.getInt(c.getColumnIndexOrThrow(TodoTasksEntry.COLUMN_NAME_DAY));
+                TodoTask task = new TodoTask(id,companyName,year,month,day);
+                tasks.add(task);
+            }
+        }
+
+        if(c != null)
+            c.close();
+        db.close();
+        if(tasks.isEmpty())
+            callback.onDataNotAvailable();
+        else
+            callback.onTasksLoaded(tasks);
     }
 
     @Override

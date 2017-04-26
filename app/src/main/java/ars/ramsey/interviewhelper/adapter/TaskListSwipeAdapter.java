@@ -71,8 +71,10 @@ public class TaskListSwipeAdapter extends RecyclerSwipeAdapter<TaskListSwipeAdap
         }
         if(task.getNextDate() == null || task.getNextDate().equals(""))
             viewHolder.txtNextDate.setVisibility(View.GONE);
-        else
-            viewHolder.txtNextDate.setText(task.getAddress());
+        else {
+            viewHolder.txtNextDate.setVisibility(View.VISIBLE);
+            viewHolder.txtNextDate.setText(task.getNextDate());
+        }
 
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override

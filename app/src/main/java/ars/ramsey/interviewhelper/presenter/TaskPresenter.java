@@ -19,20 +19,20 @@ public class TaskPresenter implements BasePresenter<TaskListView>{
     private TaskListView mView;
     private TasksLocalSource mTasksSource;
 
-    public TaskPresenter(TasksLocalSource tasksLocalSource,TaskListView view)
+    public TaskPresenter(TasksLocalSource tasksLocalSource)
     {
-        mView = view;
         mTasksSource = tasksLocalSource;
-        mView.setPresenter(this);
     }
 
     @Override
     public void attachView(TaskListView view) {
         mView = view;
+        mView.setPresenter(this);
     }
 
     @Override
     public void detachView(TaskListView view) {
+        mView.setPresenter(null);
         mView = null;
     }
 

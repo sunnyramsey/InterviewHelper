@@ -17,11 +17,9 @@ public class TaskDetailPresenter implements BasePresenter<TaskDetailView> {
     private TaskDetailView mView;
     private TasksLocalSource mLocalSource;
 
-    public TaskDetailPresenter(TasksLocalSource source,TaskDetailView view)
+    public TaskDetailPresenter(TasksLocalSource source)
     {
-        this.mView = view;
         this.mLocalSource = source;
-        mView.setPresenter(this);
     }
 
     public void getTask(int id)
@@ -44,10 +42,12 @@ public class TaskDetailPresenter implements BasePresenter<TaskDetailView> {
     @Override
     public void attachView(TaskDetailView view) {
         mView = view;
+        mView.setPresenter(this);
     }
 
     @Override
     public void detachView(TaskDetailView view) {
+        mView.setPresenter(null);
         mView = null;
     }
 }

@@ -31,6 +31,7 @@ import ars.ramsey.interviewhelper.model.bean.Task;
 import ars.ramsey.interviewhelper.presenter.TaskPresenter;
 import ars.ramsey.interviewhelper.view.LoadMoreRecyclerView;
 import ars.ramsey.interviewhelper.view.TaskListView;
+import ars.ramsey.interviewhelper.widget.DividerItemDecoration;
 
 /**
  * Created by Ramsey on 2017/4/7.
@@ -88,6 +89,7 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         loadMoreRecyclerView.setLayoutManager(manager);
+        loadMoreRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST));
 
         ProgressBar progressBar = new ProgressBar(getContext());
         progressBar.setIndeterminateDrawable(new NexusRotationCrossDrawable.Builder(getContext()).colors(getResources().getIntArray(R.array.progress_bar_colors)).build());

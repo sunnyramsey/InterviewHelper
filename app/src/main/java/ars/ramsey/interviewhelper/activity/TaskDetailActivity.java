@@ -29,7 +29,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         Log.i("RAMSEY","activity:oncreate");
         Task task = getIntent().getParcelableExtra("TASK");
         TaskDetailFragment fragment = new TaskDetailFragment();
-        TaskDetailPresenter taskDetailPresenter = new TaskDetailPresenter(TasksLocalSource.getInstance(getApplicationContext()),(TaskDetailView)fragment);
+        TaskDetailPresenter taskDetailPresenter = new TaskDetailPresenter(TasksLocalSource.getInstance(getApplicationContext()));
+        taskDetailPresenter.attachView(fragment);
         Bundle args = new Bundle();
         args.putParcelable("TASK",task);
         fragment.setArguments(args);

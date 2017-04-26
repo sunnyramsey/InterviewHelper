@@ -18,11 +18,10 @@ import ars.ramsey.interviewhelper.R;
  * Created by Ramsey on 2017/4/22.
  */
 
-public class DropEditText extends EditText {
+public class DropEditText extends RightIconEditText implements RightIconEditText.RightIconClickListener{
 
-    private Drawable mDropIcon;
-    private boolean isIconDown;
     private ListPopupWindow mListPopupWindow;
+    private String[] mData;
 
     public DropEditText(Context context) {
         super(context);
@@ -30,7 +29,7 @@ public class DropEditText extends EditText {
     }
 
     public DropEditText(Context context, AttributeSet attrs) {
-        super(context, attrs,android.R.attr.editTextStyle);
+        super(context, attrs);
         init();
     }
 
@@ -39,71 +38,28 @@ public class DropEditText extends EditText {
         init();
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        int action = event.getAction();
-        if(action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_UP)
-        {
-            if(mDropIcon != null) {
-                int x = (int) event.getX();
-                //判断触摸点是否在水平范围内
-                boolean isInnerWidth = (x > (getWidth() - getTotalPaddingRight())) &&
-                        (x < (getWidth() - getPaddingRight()));
-                //获取删除图标的边界，返回一个Rect对象
-                Rect rect = mDropIcon.getBounds();
-                //获取删除图标的高度
-                int height = rect.height();
-                int y = (int) event.getY();
-                //计算图标底部到控件底部的距离
-                int distance = (getHeight() - height) / 2;
-                //判断触摸点是否在竖直范围内(可能会有点误差)
-                //触摸点的纵坐标在distance到（distance+图标自身的高度）之内，则视为点中删除图标
-                boolean isInnerHeight = (y > distance) && (y < (distance + height));
-                switch (event.getAction())
-                {
-                    case MotionEvent.ACTION_DOWN:
-                        isIconDown = false;
-                        if (isInnerHeight && isInnerWidth) {
-                            isIconDown = true;
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (isInnerHeight && isInnerWidth  && isIconDown) {
-                            showListPopulWindow();
-                        }
-                        break;
-                }
-            }
-        }
-        return super.onTouchEvent(event);
+    private void init()
+    {
+        mData = new String[]{"笔试","一面","二面","三面","HR面","待定"};
+        setIconClickListener(this);
     }
 
-    private void showListPopulWindow(){
-        final String[] list = { "item1", "item2", "item3", "item4" };
+
+    @Override
+    public void onRightIconClick() {
 
         mListPopupWindow = new ListPopupWindow(getContext());
         mListPopupWindow.setAdapter(new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_list_item_1, list));
+                android.R.layout.simple_list_item_1, mData));
         mListPopupWindow.setAnchorView(this);
         mListPopupWindow.setModal(true);
         mListPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                DropEditText.this.setText(list[i]);
+                DropEditText.this.setText(mData[i]);
                 mListPopupWindow.dismiss();
             }
         });
         mListPopupWindow.show();
-
-    }
-
-    private void init()
-    {
-        mDropIcon = getCompoundDrawables()[2];
-        if(mDropIcon == null)
-        {
-            mDropIcon = getResources().getDrawable(R.drawable.ic_down);
-        }
-        mDropIcon.setBounds(0,0,mDropIcon.getIntrinsicWidth(),mDropIcon.getIntrinsicHeight());
     }
 }

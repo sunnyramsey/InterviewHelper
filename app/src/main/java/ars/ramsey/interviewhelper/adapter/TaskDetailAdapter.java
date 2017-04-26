@@ -9,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public class TaskDetailAdapter extends RecyclerView.Adapter {
     private static final int NORMAL_ITEM = 1;
     private static final int CALENDAR_ITEM  = 2;
     private static final int DROP_ITEM = 3;
+    private static final int OFFER_ITEM = 4;
 
     private static final String[] ITEM_DATA = {
             "公  司",
@@ -80,7 +83,7 @@ public class TaskDetailAdapter extends RecyclerView.Adapter {
         mData.add(task.getNextDate());
         mData.add(task.getAddress());
         mData.add(task.getFinishedDate());
-        mData.add(task.isOffer()?"已获得":"");
+        mData.add(task.isOffer()?"已获得":"未获得");
     }
 
     public Task getNewTask()
@@ -116,15 +119,19 @@ public class TaskDetailAdapter extends RecyclerView.Adapter {
             if(viewType == NORMAL_ITEM) {
                 ViewStub viewStub = (ViewStub) view.findViewById(R.id.task_edit_stub);
                 viewStub.inflate();
-            }else if(viewType == DROP_ITEM){
+            }else if(viewType == DROP_ITEM) {
                 ViewStub viewStub = (ViewStub) view.findViewById(R.id.task_drop_stub);
+                viewStub.inflate();
+            }else if(viewType == OFFER_ITEM)
+            {
+                ViewStub viewStub = (ViewStub) view.findViewById(R.id.task_offer_stub);
                 viewStub.inflate();
             }else {
                 ViewStub viewStub = (ViewStub) view.findViewById(R.id.task_calendar_stub);
                 viewStub.inflate();
             }
         }
-        TaskDetailViewHolder viewHolder = new TaskDetailViewHolder(view,isEdit);
+        TaskDetailViewHolder viewHolder = new TaskDetailViewHolder(view,isEdit,viewType);
         return viewHolder;
     }
 
@@ -139,21 +146,39 @@ public class TaskDetailAdapter extends RecyclerView.Adapter {
             else
                 viewHolder.tvContent.setText(data);
         }else {
-            viewHolder.tvEditContent.setText(data);
-            viewHolder.tvEditContent.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if(!hasFocus)
-                    {
-                        String text = viewHolder.tvEditContent.getText().toString();
-                        mData.set(position,text);
-                        viewHolder.tvEditContent.setText(text);
-                    }else{
-                        curEdit = (EditText) v;
-                        curPosition = position;
+            if(getItemViewType(position) != OFFER_ITEM)
+            {
+                viewHolder.tvEditContent.setText(data);
+                viewHolder.tvEditContent.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if(!hasFocus)
+                        {
+                            String text = viewHolder.tvEditContent.getText().toString();
+                            mData.set(position,text);
+                            viewHolder.tvEditContent.setText(text);
+                        }else{
+                            curEdit = (EditText) v;
+                            curPosition = position;
+                        }
                     }
-                }
-            });
+                });
+            }else{
+                viewHolder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int p, long id) {
+                        String[] items = view.getContext().getResources().getStringArray(R.array.offer_items);
+                        mData.set(position,items[p]);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        mData.set(position,"未获得");
+                    }
+                });
+            }
+
         }
 
     }
@@ -164,6 +189,8 @@ public class TaskDetailAdapter extends RecyclerView.Adapter {
             return CALENDAR_ITEM;
         else if(itemTitle[position].equals("状  态"))
             return DROP_ITEM;
+        else if(itemTitle[position].equals("OFFER"))
+            return OFFER_ITEM;
         else
             return NORMAL_ITEM;
         //return super.getItemViewType(position);
@@ -184,12 +211,16 @@ public class TaskDetailAdapter extends RecyclerView.Adapter {
         private TextView tvTitle;
         private TextView tvContent;
         private EditText tvEditContent;
+        private Spinner spinner;
 
-        public TaskDetailViewHolder(View itemView,boolean isEdit) {
+        public TaskDetailViewHolder(View itemView,boolean isEdit,int viewType) {
             super(itemView);
             if(isEdit)
             {
-                tvEditContent = (EditText)itemView.findViewById(R.id.txtEditContent);
+                if(viewType != OFFER_ITEM)
+                    tvEditContent = (EditText)itemView.findViewById(R.id.txtEditContent);
+                else
+                    spinner = (Spinner)itemView.findViewById(R.id.spinner);
             }else{
                 tvContent = (TextView)itemView.findViewById(R.id.txtContent);
             }

@@ -1,8 +1,10 @@
 package ars.ramsey.interviewhelper.model;
 
+import java.util.Date;
 import java.util.List;
 
 import ars.ramsey.interviewhelper.model.bean.Task;
+import ars.ramsey.interviewhelper.model.bean.TodoTask;
 
 /**
  * Created by Ramsey on 2017/4/7.
@@ -13,6 +15,13 @@ public interface TasksSource {
     interface LoadTasksCallback {
 
         void onTasksLoaded(List<Task> tasks);
+
+        void onDataNotAvailable();
+    }
+
+    interface LoadTodoTasksCallback {
+
+        void onTasksLoaded(List<TodoTask> tasks);
 
         void onDataNotAvailable();
     }
@@ -31,6 +40,8 @@ public interface TasksSource {
     void saveTask(Task task);
 
     void updateTask(Task task);
+
+    void getTasksByMonth(Date date,LoadTodoTasksCallback callback);
 
     void completeTask(Task task);
 
