@@ -76,5 +76,6 @@ public class TaskPresenter implements BasePresenter<TaskListView>{
     {
         mTasksSource.saveTask(task);
     }
+    public void deleteTask(Task task) { mTasksSource.deleteTask(task.getId());}
 
 }

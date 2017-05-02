@@ -192,9 +192,18 @@ public class TasksLocalSource implements TasksSource {
                     ContentValues todoValues = new ContentValues();
                     todoValues.put(TodoTasksEntry.COLUMN_NAME_COMPANY_NAME, task.getCompanyName());
                     todoValues.put(TodoTasksEntry.COLUMN_NAME_YEAR, calendar.get(Calendar.YEAR));
-                    todoValues.put(TodoTasksEntry.COLUMN_NAME_MONTH, calendar.get(Calendar.MONTH));
+                    todoValues.put(TodoTasksEntry.COLUMN_NAME_MONTH, calendar.get(Calendar.MONTH)+1);
                     todoValues.put(TodoTasksEntry.COLUMN_NAME_DAY, calendar.get(Calendar.DAY_OF_MONTH));
-                    db.update(TodoTasksEntry.TABLE_NAME, todoValues,"id=?",new String[]{String.valueOf(task.getId())});
+                    Cursor c = db.query(TodoTasksEntry.TABLE_NAME,null,"id=?",new String[]{String.valueOf(task.getId())},null,null,null);
+                    if(c == null || c.getCount() == 0)
+                    {
+                        todoValues.put(TodoTasksEntry.COLUMN_NAME_ID,task.getId());
+                        db.insert(TodoTasksEntry.TABLE_NAME,null,todoValues);
+                        Log.i("RAMSEY","new to do task");
+                    }else{
+                        db.update(TodoTasksEntry.TABLE_NAME, todoValues,"id=?",new String[]{String.valueOf(task.getId())});
+                        Log.i("RAMSEY","update to do task");
+                    }
                 } catch (ParseException e) {
                     Log.e("RAMSEY", "SAVE TO DO TASK ERROR!");
                     e.printStackTrace();
@@ -292,7 +301,15 @@ public class TasksLocalSource implements TasksSource {
     }
 
     @Override
-    public void deleteTask(String taskId) {
+    public void deleteTask(int taskId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try
+        {
+            db.delete(TaskEntry.TABLE_NAME,"id=?",new String[]{String.valueOf(taskId)});
+        }catch (Exception e)
+        {
+            Log.e("RAMSEY","delete failed");
+        }
 
     }
 }

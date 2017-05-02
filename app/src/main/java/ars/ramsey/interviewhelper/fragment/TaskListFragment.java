@@ -82,7 +82,7 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
 
 
         //Init Recyclerview
-        taskListAdapter = new TaskListSwipeAdapter(getContext(),mDataList);
+        taskListAdapter = new TaskListSwipeAdapter(getContext(),mDataList,presenter);
         taskListAdapter.setMode(Attributes.Mode.Single);
 
         loadMoreRecyclerView.setAdapter(taskListAdapter);
@@ -160,5 +160,10 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
             taskListAdapter.notifyDataSetChanged();
             loadMoreRecyclerView.loadMoreComplete();
         }
+    }
+
+    private void deleteItem(Task task)
+    {
+        presenter.deleteTask(task);
     }
 }

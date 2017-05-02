@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import ars.ramsey.interviewhelper.R;
 import ars.ramsey.interviewhelper.activity.TaskDetailActivity;
 import ars.ramsey.interviewhelper.model.bean.Task;
+import ars.ramsey.interviewhelper.presenter.TaskPresenter;
 
 /**
  * Created by Ramsey on 2017/4/13.
@@ -30,11 +31,13 @@ public class TaskListSwipeAdapter extends RecyclerSwipeAdapter<TaskListSwipeAdap
 
     private ArrayList<Task> mDataList;
     private Context mContext;
+    private TaskPresenter mPresenter;
 
-    public TaskListSwipeAdapter(Context context,ArrayList<Task> data)
+    public TaskListSwipeAdapter(Context context, ArrayList<Task> data, TaskPresenter presenter)
     {
         mContext = context;
         mDataList = data;
+        mPresenter = presenter;
         setHasStableIds(true);
     }
 
@@ -80,6 +83,8 @@ public class TaskListSwipeAdapter extends RecyclerSwipeAdapter<TaskListSwipeAdap
             @Override
             public void onClick(View view) {
                 mItemManger.closeAllItems();
+                Task task = mDataList.get(position);
+                mPresenter.deleteTask(task);
                 mDataList.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position,mDataList.size()-position);

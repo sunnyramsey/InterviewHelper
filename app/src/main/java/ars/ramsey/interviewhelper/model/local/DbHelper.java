@@ -19,6 +19,11 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("PRAGMA foreign_keys = ON;");
         sqLiteDatabase.execSQL(createTable(TasksPersistenceContract.TaskEntry.TABLE_NAME,TasksPersistenceContract.TaskEntry.COLUMNS,null));
@@ -29,6 +34,12 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        db.execSQL("PRAGMA foreign_keys = ON;");
+        super.onOpen(db);
     }
 
     private static String createTable(String tableName,String[][] columns,String constrain)

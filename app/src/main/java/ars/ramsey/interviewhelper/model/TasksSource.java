@@ -57,5 +57,5 @@ public interface TasksSource {
 
     void deleteAllTasks();
 
-    void deleteTask(String taskId);
+    void deleteTask(int taskId);
 }
