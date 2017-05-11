@@ -8,6 +8,11 @@ import ars.ramsey.interviewhelper.model.TasksSource;
 import ars.ramsey.interviewhelper.model.bean.Task;
 import ars.ramsey.interviewhelper.model.local.TasksLocalSource;
 import ars.ramsey.interviewhelper.view.TaskDetailView;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 
 /**
  * Created by Ramsey on 2017/4/11.
@@ -24,17 +29,38 @@ public class TaskDetailPresenter implements BasePresenter<TaskDetailView> {
 
     public void getTask(int id)
     {
-        mLocalSource.getTask(id, new TasksSource.GetTaskCallback() {
+        mLocalSource.getTask(id).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Task>() {
             @Override
-            public void onTaskLoaded(Task task) {
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull Task task) {
                 mView.getTask(task);
             }
 
             @Override
-            public void onDataNotAvailable() {
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });
+//        mLocalSource.getTask(id, new TasksSource.GetTaskCallback() {
+//            @Override
+//            public void onTaskLoaded(Task task) {
+//                mView.getTask(task);
+//            }
+//
+//            @Override
+//            public void onDataNotAvailable() {
+//
+//            }
+//        });
     }
 
 

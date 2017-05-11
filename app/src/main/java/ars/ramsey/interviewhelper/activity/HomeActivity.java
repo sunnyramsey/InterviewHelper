@@ -27,7 +27,7 @@ import java.util.Calendar;
 
 import ars.ramsey.interviewhelper.R;
 import ars.ramsey.interviewhelper.adapter.NavDrawerListAdapter;
-import ars.ramsey.interviewhelper.adapter.TaskListAdapter;
+import ars.ramsey.interviewhelper.fragment.ExploreFragment;
 import ars.ramsey.interviewhelper.fragment.TaskCalendarFragment;
 import ars.ramsey.interviewhelper.fragment.TaskDetailFragment;
 import ars.ramsey.interviewhelper.fragment.TaskListFragment;
@@ -221,7 +221,12 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case 1:
                 //发现
-                fragment = new TaskDetailFragment();
+                tag = "Explore";
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if(fragment == null)
+                {
+                    fragment = new ExploreFragment();
+                }
                 break;
             case 2:
                 //日历

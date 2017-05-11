@@ -89,11 +89,11 @@ public class TaskEditActivity extends AppCompatActivity {
                 if(isCreate)
                 {
                     //new task to save
-                    mLocalSource.saveTask(task);
+                    mLocalSource.saveTask(task).subscribe();
                 }else{
                     //update a old task
                     //Log.i("RAMSEY","update:"+task.getId());
-                    mLocalSource.updateTask(task);
+                    mLocalSource.updateTask(task).subscribe();
                 }
                 finish();
             }

@@ -25,7 +25,6 @@ import java.util.List;
 
 import ars.ramsey.interviewhelper.R;
 import ars.ramsey.interviewhelper.activity.TaskEditActivity;
-import ars.ramsey.interviewhelper.adapter.TaskListAdapter;
 import ars.ramsey.interviewhelper.adapter.TaskListSwipeAdapter;
 import ars.ramsey.interviewhelper.model.bean.Task;
 import ars.ramsey.interviewhelper.presenter.TaskPresenter;
@@ -141,7 +140,6 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
     @Override
     public void refresh(List<Task> data) {
         loadMoreRecyclerView.refreshComplete();
-        loadMoreRecyclerView.loadMoreComplete();
         swipeRefreshLayout.setRefreshing(false);
         mDataList.clear();
         if(data != null)

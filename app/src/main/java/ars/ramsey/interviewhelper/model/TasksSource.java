@@ -5,6 +5,7 @@ import java.util.List;
 
 import ars.ramsey.interviewhelper.model.bean.Task;
 import ars.ramsey.interviewhelper.model.bean.TodoTask;
+import io.reactivex.Observable;
 
 /**
  * Created by Ramsey on 2017/4/7.
@@ -33,15 +34,15 @@ public interface TasksSource {
         void onDataNotAvailable();
     }
 
-    void getTasks(int page,LoadTasksCallback callback);
+    Observable getTasks(int page);
 
-    void getTask(int taskId, GetTaskCallback callback);
+    Observable getTask(int taskId);
 
-    void saveTask(Task task);
+    Observable saveTask(Task task);
 
-    void updateTask(Task task);
+    Observable updateTask(Task task);
 
-    void getTasksByMonth(Date date,LoadTodoTasksCallback callback);
+    Observable getTasksByMonth(Date date);
 
     void completeTask(Task task);
 
@@ -57,5 +58,5 @@ public interface TasksSource {
 
     void deleteAllTasks();
 
-    void deleteTask(int taskId);
+    Observable deleteTask(int taskId);
 }

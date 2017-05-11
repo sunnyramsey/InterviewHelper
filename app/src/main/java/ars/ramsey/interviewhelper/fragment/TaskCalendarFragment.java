@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
@@ -70,14 +71,13 @@ public class TaskCalendarFragment extends Fragment implements TaskCalendarView<T
                 .commit();
 
         mCalendarWidget.setDateTextAppearance(R.style.CalendarTextAppearance);
-        mCalendarWidget.addDecorator(new TodayDecorator(getResources().getDrawable(R.drawable.today_circle_background)));
         mCalendarWidget.setOnMonthChangedListener(new OnMonthChangedListener() {
             @Override
             public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
                 mPresenter.getTaskByMonth(date.getDate());
             }
         });
-        mCalendarWidget.addDecorator(new TodayDecorator(getResources().getDrawable(R.drawable.today_circle_background)));
+        //mCalendarWidget.addDecorator(new TodayDecorator(getResources().getDrawable(R.drawable.today_circle_background)));
         mPresenter.getTaskByMonth(instance.getTime());
     }
 
@@ -100,16 +100,30 @@ public class TaskCalendarFragment extends Fragment implements TaskCalendarView<T
         mPresenter = presenter;
     }
 
-
     @Override
-    public void getTasks(List<TodoTask> tasks) {
-        mCalendarWidget.removeDecorators();
-        mCalendarWidget.addDecorator(new TodayDecorator(getResources().getDrawable(R.drawable.today_circle_background)));
+    public List<DayViewDecorator> transferDecorators(List<TodoTask> tasks)
+    {
+        List<DayViewDecorator> result = new ArrayList<>();
+        result.add(new TodayDecorator(getResources().getDrawable(R.drawable.today_circle_background)));
         if(tasks!=null) {
             for (TodoTask task : tasks) {
-                mCalendarWidget.addDecorator(new TodoTaskDecorator(task));
+                result.add(new TodoTaskDecorator(task));
             }
         }
+        return result;
+    }
+
+
+    @Override
+    public void refreshDecorators(List<DayViewDecorator> decorators) {
+        mCalendarWidget.removeDecorators();
+        mCalendarWidget.addDecorators(decorators);
+//        mCalendarWidget.addDecorator(new TodayDecorator(getResources().getDrawable(R.drawable.today_circle_background)));
+//        if(tasks!=null) {
+//            for (TodoTask task : tasks) {
+//                mCalendarWidget.addDecorator(new TodoTaskDecorator(task));
+//            }
+//        }
         mCalendarWidget.invalidateDecorators();
     }
 }

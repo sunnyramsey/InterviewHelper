@@ -2,6 +2,8 @@ package ars.ramsey.interviewhelper.presenter;
 
 import android.util.Log;
 
+import org.reactivestreams.Subscriber;
+
 import java.util.List;
 
 import ars.ramsey.interviewhelper.model.TasksSource;
@@ -9,6 +11,11 @@ import ars.ramsey.interviewhelper.model.bean.Task;
 import ars.ramsey.interviewhelper.model.local.TasksLocalSource;
 import ars.ramsey.interviewhelper.view.BaseView;
 import ars.ramsey.interviewhelper.view.TaskListView;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Ramsey on 2017/4/7.
@@ -17,9 +24,9 @@ import ars.ramsey.interviewhelper.view.TaskListView;
 public class TaskPresenter implements BasePresenter<TaskListView>{
 
     private TaskListView mView;
-    private TasksLocalSource mTasksSource;
+    private TasksSource mTasksSource;
 
-    public TaskPresenter(TasksLocalSource tasksLocalSource)
+    public TaskPresenter(TasksSource tasksLocalSource)
     {
         mTasksSource = tasksLocalSource;
     }
@@ -46,36 +53,51 @@ public class TaskPresenter implements BasePresenter<TaskListView>{
 
     public void loadTasks(final int page)
     {
-        mTasksSource.getTasks(page, new TasksSource.LoadTasksCallback() {
+        mTasksSource.getTasks(page).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Task>>() {
             @Override
-            public void onTasksLoaded(List<Task> tasks) {
-                if(page == 1)
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull List<Task> tasks) {
+                if(tasks.size() == 0)
                 {
-                    mView.refresh(tasks);
+                    if(page == 1)
+                    {
+                        mView.refresh(null);
+                    }else
+                    {
+                        mView.loadMore(null);
+                    }
                 }else{
-                    mView.loadMore(tasks);
+                    if(page == 1)
+                    {
+                        mView.refresh(tasks);
+                    }else{
+                        mView.loadMore(tasks);
+                    }
                 }
             }
 
             @Override
-            public void onDataNotAvailable() {
-                if(page == 1)
-                {
-                    mView.refresh(null);
-                }else
-                {
-                    mView.loadMore(null);
-                }
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });
+
 
     }
 
     public void saveTasks(Task task)
     {
-        mTasksSource.saveTask(task);
+        mTasksSource.saveTask(task).subscribe();
     }
-    public void deleteTask(Task task) { mTasksSource.deleteTask(task.getId());}
+    public void deleteTask(Task task) { mTasksSource.deleteTask(task.getId()).subscribe();}
 
 }
