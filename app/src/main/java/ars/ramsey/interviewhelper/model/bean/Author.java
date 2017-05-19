@@ -17,7 +17,7 @@ public class Author implements Parcelable {
 
     private String profileUrl;
 
-    //private Avatar avatar;
+    private Avatar avatar;
 
     private String slug;
 
@@ -28,7 +28,7 @@ public class Author implements Parcelable {
         this.hash = in.readString();
         this.description = in.readString();
         this.profileUrl = in.readString();
-        //this.avatar = in.readParcelable(Avatar.class.getClassLoader());
+        this.avatar = in.readParcelable(Avatar.class.getClassLoader());
         this.slug = in.readString();
         this.name = in.readString();
     }
@@ -39,7 +39,7 @@ public class Author implements Parcelable {
         dest.writeString(this.hash);
         dest.writeString(this.description);
         dest.writeString(this.profileUrl);
-        //dest.writeParcelable(this.avatar, flags);
+        dest.writeParcelable(this.avatar, flags);
         dest.writeString(this.slug);
         dest.writeString(this.name);
     }
