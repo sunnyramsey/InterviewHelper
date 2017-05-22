@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ars.ramsey.interviewhelper.widget.FloatingMenu.MainMenu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:backgroundColor="@android:color/white"
+    app:switchFabIcon="@drawable/ic_down"
+    app:switchFabColor="@android:color/white">
+    <ars.ramsey.interviewhelper.widget.FloatingMenu.MenuItem
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tagText="新任务">
+        <android.support.design.widget.FloatingActionButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src = "@drawable/ic_datetime"
+            app:fabSize="mini"
+            app:backgroundTint="@android:color/white"/>
+    </ars.ramsey.interviewhelper.widget.FloatingMenu.MenuItem>
+    <ars.ramsey.interviewhelper.widget.FloatingMenu.MenuItem
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tagText="新面经">
+        <android.support.design.widget.FloatingActionButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src = "@drawable/ic_datetime"
+            app:fabSize="mini"
+            app:backgroundTint="@android:color/white"/>
+    </ars.ramsey.interviewhelper.widget.FloatingMenu.MenuItem>
+
+</ars.ramsey.interviewhelper.widget.FloatingMenu.MainMenu>

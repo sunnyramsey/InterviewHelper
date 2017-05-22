@@ -3,6 +3,7 @@ package ars.ramsey.interviewhelper.widget.FloatingMenu;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -18,8 +19,12 @@ public class MenuTag extends CardView {
     private TextView mMenuText;
 
 
+    public MenuTag(Context context) {
+        this(context,null);
+    }
+
     public MenuTag(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
 
@@ -29,9 +34,7 @@ public class MenuTag extends CardView {
         mMenuText.setSingleLine(true);
     }
 
-    public MenuTag(Context context) {
-        super(context);
-    }
+
 
     protected void setTextSize(float size){
         mMenuText.setTextSize(size);

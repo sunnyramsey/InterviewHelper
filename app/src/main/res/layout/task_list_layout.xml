@@ -13,15 +13,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/icon_fab"
-        fab:fab_colorNormal="@color/yellow"
-        fab:fab_colorPressed="@color/red"
-        fab:fab_colorRipple="@color/green"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="24dp"
-        android:src="@drawable/ic_shuffle" />
+
+    <include layout="@layout/task_floating_menu"
+        android:id="@+id/floating_menu"/>
+
+    <!--<com.melnykov.fab.FloatingActionButton-->
+        <!--android:id="@+id/icon_fab"-->
+        <!--fab:fab_colorNormal="@color/yellow"-->
+        <!--fab:fab_colorPressed="@color/red"-->
+        <!--fab:fab_colorRipple="@color/green"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|right"-->
+        <!--android:layout_margin="24dp"-->
+        <!--android:src="@drawable/ic_shuffle" />-->
 
 </FrameLayout>

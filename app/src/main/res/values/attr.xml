@@ -3,4 +3,11 @@
     <declare-styleable name="MenuItem">
         <attr name="tagText" format="string"/>
     </declare-styleable>
+    
+    <declare-styleable name="MainMenu">
+        <attr name="backgroundColor" format="color"/>
+        <attr name="switchFabIcon" format="reference"/>
+        <attr name="switchFabColor" format="color"/>
+        <attr name="animationDuration" format="integer"/>
+    </declare-styleable>
 </resources>

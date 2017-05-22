@@ -1,5 +1,6 @@
 package ars.ramsey.interviewhelper.fragment;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,6 +33,8 @@ import ars.ramsey.interviewhelper.presenter.TaskPresenter;
 import ars.ramsey.interviewhelper.view.LoadMoreRecyclerView;
 import ars.ramsey.interviewhelper.view.TaskListView;
 import ars.ramsey.interviewhelper.widget.DividerItemDecoration;
+import ars.ramsey.interviewhelper.widget.FloatingMenu.MainMenu;
+import ars.ramsey.interviewhelper.widget.FloatingMenu.MenuItem;
 
 /**
  * Created by Ramsey on 2017/4/7.
@@ -42,15 +46,15 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
     private LoadMoreRecyclerView loadMoreRecyclerView;
     private TaskListSwipeAdapter taskListAdapter;
     private FloatingActionButton actionButton;
+    private MainMenu mFloatingMenu;
+
+
 
     private ArrayList<Task> mDataList = new ArrayList<>();
     private int page = 1;
 
     private TaskPresenter presenter;
 
-    //For testing
-    private RecyclerView.Adapter adapter;
-    private ArrayList<String> mDataSet;
 
     public TaskListFragment() {
     }
@@ -64,20 +68,40 @@ public class TaskListFragment extends Fragment implements TaskListView<TaskPrese
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        actionButton = (FloatingActionButton)view.findViewById(R.id.icon_fab);
+        //actionButton = (FloatingActionButton)view.findViewById(R.id.icon_fab);
         swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swiperefresh);
         loadMoreRecyclerView = (LoadMoreRecyclerView)view.findViewById(R.id.load_more_recycleview);
+        mFloatingMenu = (MainMenu)view.findViewById(R.id.floating_menu);
 
-        actionButton.attachToRecyclerView(loadMoreRecyclerView);
-        actionButton.setOnClickListener(new View.OnClickListener() {
+        mFloatingMenu.setOnMenuItemClickListener(new MainMenu.onMenuItemClickListener() {
             @Override
-            public void onClick(View v) {
-                Log.i("RAMSEY","Create New Task");
-                Intent intent = new Intent(getContext(), TaskEditActivity.class);
-                intent.putExtra("CREATE",true);
-                startActivity(intent);
+            public void onMenuItemClick(MenuItem view, int pos) {
+                switch (pos)
+                {
+                    case 0:
+                        Log.i("RAMSEY","Create New Task");
+                        Intent intent = new Intent(getContext(), TaskEditActivity.class);
+                        intent.putExtra("CREATE",true);
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        Log.i("RAMSEY","TODO!");
+                        break;
+                }
             }
         });
+
+//        actionButton.attachToRecyclerView(loadMoreRecyclerView);
+//        actionButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i("RAMSEY","Create New Task");
+//                Intent intent = new Intent(getContext(), TaskEditActivity.class);
+//                intent.putExtra("CREATE",true);
+//                startActivity(intent);
+//
+//            }
+//        });
 
 
         //Init Recyclerview

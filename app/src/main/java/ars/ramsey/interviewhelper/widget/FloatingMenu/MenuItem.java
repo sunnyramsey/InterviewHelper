@@ -3,6 +3,7 @@ package ars.ramsey.interviewhelper.widget.FloatingMenu;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,10 @@ import ars.ramsey.interviewhelper.R;
  */
 
 public class MenuItem extends ViewGroup {
-    private String mTagText;
+    public String mTagText;
     private MenuTag mMenuTag;
     private onMenuClickListener mListener;
+
 
     public interface onMenuClickListener{
         void onMenuClick();
@@ -66,12 +68,13 @@ public class MenuItem extends ViewGroup {
         {
             View view = getChildAt(i);
             measureChild(view,widthMeasureSpec,heightMeasureSpec);
-            width += view.getWidth();
-            height = Math.max(height,view.getHeight());
+            width += view.getMeasuredWidth();
+            height = Math.max(height,view.getMeasuredHeight());
         }
 
         width += dp2px(8 + 8 + 8);
         height += dp2px(8 + 8);
+
 
         setMeasuredDimension(width,height);
 
